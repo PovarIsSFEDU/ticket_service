@@ -20,6 +20,21 @@ on:
     - cron: '40 11 * * 1'
 
 jobs:
+  read_type:
+    outputs:
+      primaryLanguage: ${{ steps.read.outputs.primary_language }}
+    runs-on: ubuntu-latest
+    name: Detect Primary Language
+    steps:
+      - name: Read integration_type
+        id: read
+        uses: fiddlermikey/action-get-primary-language@v1
+        with:
+          token: ${{ secrets.GH_PAT}}
+      - name: Display type
+        id: display
+        run: |
+          echo ${{ steps.read.outputs.primary_language}} | tee -a $GITHUB_STEP_SUMMARY
   analyze:
     name: Analyze (${{ matrix.language }})
     # Runner size impacts CodeQL analysis time. To learn more, please see:
